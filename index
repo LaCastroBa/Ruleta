@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruleta de temas del proyecto</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #f2f4f8; color: #2b2b2b; padding: 18px; }
+  .cont { max-width: 640px; margin: 0 auto; }
+  .card { background: #ffffff; border-radius: 18px; padding: 24px; border-left: 8px solid #6d5bd0; text-align: center; }
+  .titulo { font-size: 44px; line-height: 1; margin-bottom: 2px; }
+  .sub { font-size: 20px; font-weight: bold; color: #6d5bd0; margin: 0 0 18px 0; }
+  button { background: #2ed573; color: #fff; border: none; font-family: inherit; font-size: 18px; font-weight: bold; padding: 14px 30px; border-radius: 12px; cursor: pointer; transition: transform .1s; }
+  button:hover { transform: scale(1.04); }
+  .res { margin-top: 20px; background: #eafaf1; border-left: 8px solid #2ed573; border-radius: 16px; padding: 18px; text-align: left; display: none; }
+  .res.show { display: block; }
+  .res .tema { font-size: 21px; font-weight: bold; color: #1e7d48; margin: 0 0 4px 0; }
+  .res .eje { font-size: 15px; color: #6d5bd0; font-weight: bold; margin: 0 0 10px 0; }
+  .res .idea { font-size: 17px; margin: 0 0 12px 0; }
+  .res .caja { background: #ffffff; border: 1px dashed #6d5bd0; border-radius: 12px; padding: 12px 14px; font-size: 16px; }
+  .res .caja p { margin: 0 0 6px 0; }
+  .res .caja p:last-child { margin: 0; }
+  .nota { font-size: 14px; color: #6d5bd0; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="cont">
+<div class="card">
+<div class="titulo">🎡</div>
+<p class="sub">Ruleta de temas del proyecto</p>
+<button id="btn">🎯 ¡Girar la ruleta!</button>
+<div class="res" id="res">
+<p class="tema" id="rTema"></p>
+<p class="eje" id="rEje"></p>
+<p class="idea" id="rIdea"></p>
+<div class="caja">
+<p id="rFormato"></p>
+<p id="rEjemplo"></p>
+</div>
+</div>
+<p class="nota">💡 La ruleta es solo una idea para arrancar. Podés usar el tema tal cual, cambiarle el formato, combinar dos, o proponer tu propia idea.</p>
+</div>
+</div>
+<script>
+(function(){
+  var temas = [
+    { t:"Huella digital", eje:"Eje 1 · Ciudadanía digital", idea:"Mostrá cómo cada cosa que publicamos deja un rastro que no se borra.", fmt:"🎬 Una animación o historia", ej:"Un personaje camina por internet y va dejando huellas que lo siguen." },
+    { t:"Datos públicos y privados", eje:"Eje 1 · Ciudadanía digital", idea:"Enseñá a distinguir qué datos se pueden compartir y cuáles no.", fmt:"🎮 Un juego tipo quiz", ej:"Aparece un dato y el jugador decide: ¿público o privado? Suma puntos si acierta." },
+    { t:"Redes sociales seguras", eje:"Eje 1 · Ciudadanía digital", idea:"Mostrá cómo usar las redes de forma segura.", fmt:"🎮 Un juego de esquivar", ej:"El personaje esquiva mensajes de desconocidos y atrapa los consejos buenos." },
+    { t:"Noticias falsas", eje:"Eje 1 · Ciudadanía digital", idea:"Enseñá a reconocer una noticia falsa de una verdadera.", fmt:"🎮 Un juego con semáforo", ej:"Aparecen noticias y hay que marcarlas: verde confiable, amarillo dudosa, rojo falsa." },
+    { t:"Los sesgos de la IA", eje:"Eje 1 · Inteligencia Artificial", idea:"Mostrá que la IA aprende de datos y puede equivocarse.", fmt:"🎬 Una animación", ej:"Una IA no reconoce algo bien uruguayo, como el mate, porque nunca lo vio." },
+    { t:"Basura electrónica", eje:"Eje 1 · Consumo responsable", idea:"Enseñá a desechar los aparatos de forma responsable.", fmt:"🎮 Un juego de clasificar", ej:"Caen aparatos viejos y hay que mandarlos a: reparar, donar o reciclar." },
+    { t:"Hardware y software", eje:"Eje 2 · Arquitectura", idea:"Mostrá la diferencia entre lo físico y los programas.", fmt:"🎮 Un juego de arrastrar", ej:"Aparecen elementos y hay que ponerlos en la caja H (hardware) o S (software)." },
+    { t:"El viaje de un mensaje", eje:"Eje 2 · Redes e Internet", idea:"Mostrá cómo viaja la información por internet.", fmt:"🎬 Una historia interactiva", ej:"Un mensaje viaja por cables y antenas hasta un servidor y vuelve con la respuesta." },
+    { t:"Navegación segura", eje:"Eje 1 · Ciudadanía digital", idea:"Enseñá a reconocer un sitio web confiable.", fmt:"📣 Una campaña con mensaje", ej:"Un detective revisa direcciones web y descubre cuáles son trampas." },
+    { t:"El sistema operativo", eje:"Eje 2 · Arquitectura", idea:"Mostrá qué hace el sistema operativo, el director de orquesta.", fmt:"🎬 Una animación", ej:"Un director coordina a las aplicaciones para que funcionen sin pisarse." }
+  ];
+  var btn = document.getElementById("btn");
+  var res = document.getElementById("res");
+  var girando = false;
+  btn.addEventListener("click", function(){
+    if (girando) return;
+    girando = true;
+    res.classList.add("show");
+    var cont = 0, total = 18;
+    var timer = setInterval(function(){
+      var r = temas[Math.floor(Math.random()*temas.length)];
+      document.getElementById("rTema").textContent = "🎡 " + r.t;
+      document.getElementById("rEje").textContent = "";
+      document.getElementById("rIdea").textContent = "";
+      document.getElementById("rFormato").textContent = "";
+      document.getElementById("rEjemplo").textContent = "";
+      cont++;
+      if (cont >= total) {
+        clearInterval(timer);
+        var f = temas[Math.floor(Math.random()*temas.length)];
+        document.getElementById("rTema").textContent = "✨ Tu tema: " + f.t;
+        document.getElementById("rEje").textContent = f.eje;
+        document.getElementById("rIdea").textContent = f.idea;
+        document.getElementById("rFormato").innerHTML = "<strong>Formato sugerido:</strong> " + f.fmt;
+        document.getElementById("rEjemplo").innerHTML = "<strong>Idea para arrancar:</strong> " + f.ej;
+        btn.textContent = "🔄 Girar de nuevo";
+        girando = false;
+      }
+    }, 90);
+  });
+})();
+</script>
+</body>
+</html>
