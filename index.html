@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ruleta de temas del proyecto</title>
+<title>Ruleta de proyectos</title>
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f2f4f8; color: #2b2b2b; padding: 20px 0; }
-  .cont { max-width: 640px; margin: 0 auto; }
+  body { font-family: Arial, Helvetica, sans-serif; background: #f2f4f8; color: #2b2b2b; margin: 0; padding: 20px; }
+  .cont { max-width: 620px; margin: 0 auto; }
   .banner { background: #6d5bd0; color: #f2f4f8; padding: 22px 26px; border-radius: 18px; text-align: center; margin-bottom: 20px; }
   .banner h1 { margin: 0; font-size: 22px; }
   .banner p { margin: 6px 0 0 0; font-size: 15px; }
   .card { background: #ffffff; border-radius: 18px; padding: 24px; border-left: 8px solid #22c1f1; text-align: center; }
-  .wheel-wrap { position: relative; width: 320px; height: 320px; margin: 10px auto 18px; }
+  .wheel-wrap { position: relative; width: 300px; height: 300px; margin: 10px auto 18px; }
   .pointer { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 26px solid #ff4757; z-index: 5; filter: drop-shadow(0 2px 2px rgba(0,0,0,.2)); }
-  canvas { border-radius: 50%; box-shadow: 0 6px 18px rgba(0,0,0,.15); display: block; max-width: 100%; }
+  canvas { border-radius: 50%; box-shadow: 0 6px 18px rgba(0,0,0,.15); display: block; }
   button { background: #2ed573; color: #fff; border: none; font-family: inherit; font-size: 18px; font-weight: bold; padding: 14px 30px; border-radius: 12px; cursor: pointer; transition: transform .1s; }
   button:hover { transform: scale(1.04); }
   button:disabled { background: #b9c2cc; cursor: default; transform: none; }
   .result { margin-top: 20px; background: #eafaf1; border-left: 8px solid #2ed573; border-radius: 16px; padding: 18px; text-align: left; display: none; }
   .result.show { display: block; }
-  .result .tema { font-size: 20px; font-weight: bold; color: #1e7d48; margin: 0 0 8px 0; }
+  .result .tema { font-size: 19px; font-weight: bold; color: #1e7d48; margin: 0 0 8px 0; }
   .result .detalle { font-size: 17px; margin: 0; }
   .result .formato { margin-top: 10px; font-size: 16px; background: #ffffff; border: 1px dashed #6d5bd0; border-radius: 12px; padding: 10px 12px; }
   .nota { font-size: 14px; color: #6d5bd0; margin-top: 14px; }
@@ -29,13 +29,13 @@
 <body>
 <div class="cont">
   <div class="banner">
-    <h1>🎡 Ruleta de temas del proyecto</h1>
+    <h1>🎡 Ruleta de proyectos</h1>
     <p>¿No sabés qué tema elegir? ¡Girá y mirá qué te toca!</p>
   </div>
   <div class="card">
     <div class="wheel-wrap">
       <div class="pointer"></div>
-      <canvas id="wheel" width="320" height="320"></canvas>
+      <canvas id="wheel" width="300" height="300"></canvas>
     </div>
     <button id="spin">🎯 ¡Girar la ruleta!</button>
     <div class="result" id="result">
@@ -43,87 +43,89 @@
       <p class="detalle" id="r-detalle"></p>
       <div class="formato" id="r-formato"></div>
     </div>
-    <p class="nota">💡 La ruleta es solo una idea para empezar. Podés usar el tema tal cual, cambiarle el formato o inspirarte para proponer el tuyo.</p>
+    <p class="nota">💡 La ruleta es solo una idea para arrancar. Podés usar el tema tal cual, cambiarle el formato o inspirarte para proponer el tuyo.</p>
   </div>
 </div>
 
 <script>
-var temas = [
-  { corto:"Identidad y huella digital", color:"#6d5bd0", idea:"Mostrá cómo lo que hacemos en internet construye nuestra identidad y deja huella.", ej:"Un personaje camina por internet y va dejando huellas que lo siguen." },
-  { corto:"Datos y cuidado de la imagen", color:"#22c1f1", idea:"Enseñá a proteger los datos personales, los sensibles y la propia imagen.", ej:"Un quiz: aparece un dato y hay que decidir si se protege o se puede compartir." },
-  { corto:"Redes sociales y seguridad", color:"#2ed573", idea:"Mostrá cómo usar las redes sociales de forma segura.", ej:"El personaje esquiva mensajes de desconocidos y atrapa los consejos buenos." },
-  { corto:"Información pública y privada", color:"#ff4757", idea:"Enseñá a distinguir qué información puede circular y cuál hay que proteger.", ej:"Clasificá cada dato en la caja pública o en la caja privada antes de que caiga." },
-  { corto:"Derechos y legislación digital", color:"#6d5bd0", idea:"Mostrá los derechos y obligaciones que tenemos en los ambientes digitales.", ej:"Una historia donde un personaje reclama por sus datos ante la URCDP." },
-  { corto:"Navegación segura", color:"#22c1f1", idea:"Enseñá a reconocer un sitio web confiable y las trampas de internet.", ej:"Un detective revisa direcciones web y descubre cuáles son falsas." },
-  { corto:"Credibilidad de la información", color:"#2ed573", idea:"Enseñá a analizar si una información es confiable, exacta y objetiva.", ej:"Un juego con semáforo: marcá cada noticia como confiable, dudosa o falsa." },
-  { corto:"Historia de la computación", color:"#ff4757", idea:"Mostrá cómo la tecnología cambió la vida a lo largo del tiempo.", ej:"Una línea de tiempo animada: del ábaco a la computadora de hoy." },
-  { corto:"Inteligencia Artificial", color:"#6d5bd0", idea:"Mostrá los usos, los sesgos y los deepfakes de la IA, y su impacto ético.", ej:"Una IA no reconoce algo bien uruguayo, como el mate, porque nunca lo vio." },
-  { corto:"Basura electrónica", color:"#22c1f1", idea:"Enseñá sobre obsolescencia, residuos electrónicos y consumo responsable.", ej:"Caen aparatos viejos y hay que mandarlos a: reparar, donar o reciclar." }
+const temas = [
+  { corto: "Huella digital", color: "#6d5bd0", idea: "Mostrá cómo cada cosa que publicamos deja un rastro en internet.", ej: "Un personaje camina y va dejando huellas que no se borran." },
+  { corto: "Datos privados", color: "#22c1f1", idea: "Enseñá a distinguir qué datos se pueden compartir y cuáles no.", ej: "Un quiz: aparece un dato y hay que decidir ¿público o privado?" },
+  { corto: "Redes seguras", color: "#2ed573", idea: "Mostrá cómo usar las redes sociales de forma segura.", ej: "Un juego donde el personaje esquiva mensajes de desconocidos." },
+  { corto: "Noticias falsas", color: "#ff4757", idea: "Enseñá a reconocer una noticia falsa de una verdadera.", ej: "Aparecen noticias y hay que marcarlas con el semáforo 🟢🟡🔴." },
+  { corto: "Sesgos de la IA", color: "#6d5bd0", idea: "Mostrá que la IA aprende de datos y puede equivocarse.", ej: "Una animación donde una IA no reconoce algo uruguayo (¡el mate!)." },
+  { corto: "Basura electrónica", color: "#22c1f1", idea: "Enseñá a desechar los aparatos de forma responsable.", ej: "Un juego de clasificar residuos: reparar, donar, reciclar." },
+  { corto: "Hardware y software", color: "#2ed573", idea: "Mostrá la diferencia entre lo físico y los programas.", ej: "Un juego de arrastrar cada elemento a su caja: H o S." },
+  { corto: "Viaje por internet", color: "#ff4757", idea: "Mostrá cómo viaja un mensaje de un lugar a otro.", ej: "Una historia: un mensaje viaja por cables hasta un servidor." },
 ];
+const formatos = ["🎮 Un juego", "🎬 Una animación o historia", "📣 Una campaña con mensaje"];
 
-var canvas = document.getElementById("wheel");
-var ctx = canvas.getContext("2d");
-var cx = 160, cy = 160, r = 160;
-var n = temas.length;
-var arc = 2 * Math.PI / n;
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+const cx = 150, cy = 150, r = 150;
+const n = temas.length;
+const arc = 2 * Math.PI / n;
 
 function draw(rot) {
-  ctx.clearRect(0, 0, 320, 320);
-  for (var i = 0; i < n; i++) {
-    var a = rot + i * arc;
+  ctx.clearRect(0, 0, 300, 300);
+  for (let i = 0; i < n; i++) {
+    const a = rot + i * arc;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, r, a, a + arc);
     ctx.closePath();
     ctx.fillStyle = temas[i].color;
     ctx.fill();
+    // texto
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(a + arc / 2);
     ctx.textAlign = "right";
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 11px Arial";
-    ctx.fillText(temas[i].corto, r - 12, 4);
+    ctx.font = "bold 13px Arial";
+    ctx.fillText(temas[i].corto, r - 14, 5);
     ctx.restore();
   }
+  // centro
   ctx.beginPath();
-  ctx.arc(cx, cy, 28, 0, 2 * Math.PI);
+  ctx.arc(cx, cy, 26, 0, 2 * Math.PI);
   ctx.fillStyle = "#ffffff";
   ctx.fill();
-  ctx.font = "22px Arial";
+  ctx.font = "20px Arial";
   ctx.textAlign = "center";
-  ctx.fillText("🎡", cx, cy + 8);
+  ctx.fillText("🎡", cx, cy + 7);
 }
 
-var rot = 0, spinning = false;
+let rot = 0, spinning = false;
 draw(rot);
 
-var btn = document.getElementById("spin");
-var result = document.getElementById("result");
+const btn = document.getElementById("spin");
+const result = document.getElementById("result");
 
-btn.addEventListener("click", function() {
+btn.addEventListener("click", () => {
   if (spinning) return;
   spinning = true;
   btn.disabled = true;
   result.classList.remove("show");
-  var extra = Math.random() * 2 * Math.PI;
-  var vueltas = 5 * 2 * Math.PI;
-  var target = rot + vueltas + extra;
-  var start = rot;
-  var dur = 3800;
-  var t0 = performance.now();
+  const extra = Math.random() * 2 * Math.PI;
+  const vueltas = 5 * 2 * Math.PI;
+  const target = rot + vueltas + extra;
+  const start = rot;
+  const dur = 3800;
+  const t0 = performance.now();
   function anim(t) {
-    var p = Math.min((t - t0) / dur, 1);
-    var ease = 1 - Math.pow(1 - p, 3);
+    const p = Math.min((t - t0) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
     rot = start + (target - start) * ease;
     draw(rot);
     if (p < 1) { requestAnimationFrame(anim); }
     else {
       spinning = false;
       btn.disabled = false;
-      var norm = ((rot % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
-      var pointerAngle = (1.5 * Math.PI - norm + 2*Math.PI) % (2*Math.PI);
-      var idx = Math.floor(pointerAngle / arc) % n;
+      // el puntero está arriba (ángulo -90° = 1.5π). Calculamos qué sector quedó ahí.
+      const norm = ((rot % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+      const pointerAngle = (1.5 * Math.PI - norm + 2*Math.PI) % (2*Math.PI);
+      const idx = Math.floor(pointerAngle / arc) % n;
       mostrar(idx);
     }
   }
@@ -131,10 +133,11 @@ btn.addEventListener("click", function() {
 });
 
 function mostrar(i) {
-  var tema = temas[i];
+  const tema = temas[i];
+  const formato = formatos[Math.floor(Math.random() * formatos.length)];
   document.getElementById("r-tema").textContent = "✨ Tu tema: " + tema.corto;
   document.getElementById("r-detalle").textContent = tema.idea;
-  document.getElementById("r-formato").innerHTML = "<strong>Idea para empezar:</strong> " + tema.ej;
+  document.getElementById("r-formato").innerHTML = "<strong>Formato sugerido:</strong> " + formato + "<br><strong>Idea para arrancar:</strong> " + tema.ej;
   result.classList.add("show");
 }
 </script>
