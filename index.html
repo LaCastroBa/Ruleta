@@ -43,7 +43,7 @@
       <p class="detalle" id="r-detalle"></p>
       <div class="formato" id="r-formato"></div>
     </div>
-    <p class="nota">💡 La ruleta es solo una idea para arrancar. Podés usar el tema tal cual, cambiarle el formato o inspirarte para proponer el tuyo.</p>
+    <p class="nota">💡 La ruleta es solo una idea para empezar. Podés usar el tema tal cual, cambiarle el formato o inspirarte para proponer el tuyo.</p>
   </div>
 </div>
 
@@ -137,7 +137,7 @@ function mostrar(i) {
   const formato = formatos[Math.floor(Math.random() * formatos.length)];
   document.getElementById("r-tema").textContent = "✨ Tu tema: " + tema.corto;
   document.getElementById("r-detalle").textContent = tema.idea;
-  document.getElementById("r-formato").innerHTML = "<strong>Formato sugerido:</strong> " + formato + "<br><strong>Idea para arrancar:</strong> " + tema.ej;
+  document.getElementById("r-formato").innerHTML = "<strong>Formato sugerido:</strong> " + formato + "<br><strong>Idea para empezar:</strong> " + tema.ej;
   result.classList.add("show");
 }
 </script>
